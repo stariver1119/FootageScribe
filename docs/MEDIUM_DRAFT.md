@@ -23,12 +23,32 @@ _footage_scribe/
 ├── manifest.tsv
 ├── rename_suggestions.tsv
 └── scripts/
-    ├── 001_intro_room_cleanup_decision.txt
-    ├── 002_bed_frame_pickup_commentary.txt
-    └── 003_late_night_moving_broll.txt
+    ├── 001_station_arrival_establishing_shot.txt
+    ├── 002_ticket_machine_walkthrough.txt
+    └── 003_platform_voiceover_notes.txt
 ```
 
 Each script is a plain `.txt` file with metadata, a suggested readable name, scene labels, and timestamped transcription.
+
+For example:
+
+```text
+Original file: IMG_2968.MOV
+Suggested name: ticket_machine_walkthrough.mp4
+Duration: 00:01:26
+Transcription model: whisper.cpp ggml-small
+Original modified: no
+Scene label: tutorial / station kiosk / handheld screen recording
+Confidence: medium
+
+Summary:
+A short walkthrough explaining how to buy a day pass from a station ticket machine, with useful cutaways of the screen and payment step.
+
+Transcript:
+[00:00.000 - 00:04.700] First, change the language from the top-right corner.
+[00:04.700 - 00:10.200] Then choose the day pass, not the single ride ticket.
+[00:10.200 - 00:16.400] This part is a good close-up because the price and zone options are both visible.
+```
 
 ## Why This Connects to Olwaty
 
@@ -50,4 +70,3 @@ Different parts of the same creator problem:
 I want tools like this to stay close to the creator's actual workflow. Not a giant dashboard. Not a magic one-click editor. Just useful preprocessing that respects the files you already have and the projects you already started.
 
 That is what FootageScribe is trying to be: a small bridge between raw media chaos and structured creative discussion.
-

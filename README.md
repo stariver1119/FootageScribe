@@ -63,29 +63,29 @@ _footage_scribe/
 ├── frames/
 ├── audio/
 └── scripts/
-    ├── 001_intro_room_cleanup_decision.txt
-    ├── 002_bed_frame_pickup_commentary.txt
-    └── 003_late_night_moving_broll.txt
+    ├── 001_market_arrival_walkthrough.txt
+    ├── 002_vendor_interview_coffee_notes.txt
+    └── 003_product_closeup_broll.txt
 ```
 
 ## Example Sidecar Script
 
 ```text
-Original file: VID_0017.MP4
-Suggested name: intro_room_cleanup_decision.mp4
-Duration: 00:02:14
+Original file: GX010143.MP4
+Suggested name: vendor_interview_coffee_notes.mp4
+Duration: 00:03:42
 Transcription model: whisper.cpp ggml-small
 Original modified: no
-Scene label: talking head / messy room / setup
+Scene label: interview / market stall / product tasting
 Confidence: medium
 
 Summary:
-A talking-head clip where the creator explains that the room has become difficult to live in and introduces the plan to clean, move the bed, and reorganize the space.
+A short vendor conversation about how the coffee beans are roasted, followed by a handheld close-up of the tasting table.
 
 Transcript:
-[00:00.000 - 00:04.820] I have been putting this off for way too long.
-[00:04.820 - 00:09.500] This room is basically telling me to get my life together.
-[00:09.500 - 00:15.240] Today I am going to move the bed and actually clean this corner.
+[00:00.000 - 00:05.280] We roast these beans a little lighter so the citrus notes stay clear.
+[00:05.280 - 00:12.640] The first sip is brighter, but the finish is more chocolate than fruit.
+[00:12.640 - 00:18.900] Let me get a close shot of the label and the pour-over setup.
 ```
 
 ## Agent-Friendly by Design
@@ -201,7 +201,7 @@ flowchart LR
     D --> E
 ```
 
-Frame sampling is useful for labels like talking head, room cleanup, desk setup, walking outside, pickup, food close-up, and B-roll. It cannot reliably infer what was said. Use audio transcription for spoken context.
+Frame sampling is useful for labels like interview, product close-up, desk setup, walking outside, screen walkthrough, food detail, and B-roll. It cannot reliably infer what was said. Use audio transcription for spoken context.
 
 ## What It Does Not Do
 
