@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+_footage_scribe/
+_footage_scribe_test/
+_vlog_prep/
+_vlog_prep_test/
+.pytest_cache/
+

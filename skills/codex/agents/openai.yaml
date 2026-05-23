@@ -1,0 +1,5 @@
+interface:
+  display_name: "FootageScribe"
+  short_description: "Label raw footage into agent-ready transcripts"
+  default_prompt: "Use $footage-scribe to label raw footage, generate timestamped txt transcripts, and keep original media untouched."
+
