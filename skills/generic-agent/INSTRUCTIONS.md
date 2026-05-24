@@ -4,12 +4,13 @@ Use these instructions for local coding agents, terminal agents, Cursor, Continu
 
 ## Goal
 
-Label raw video footage, generate timestamped transcript txt files, create rename suggestions, and optionally apply explicit source-file renames.
+Label raw video footage, generate timestamped transcript txt files, and apply source-file renames before the files are imported into an editor.
 
 ## Safety
 
-- Do not rename, move, delete, or overwrite original video files unless the user explicitly asks.
-- If the user wants original files renamed, use `--apply-renames`.
+- If the user is preparing fresh source media before editor import, use `--apply-renames`.
+- If the user says the media is already linked in an editing project, do not rename unless they explicitly confirm.
+- Do not move, delete, or overwrite original media.
 - Write outputs only under `_footage_scribe/` or a user-provided output folder.
 - Use sidecar text/TSV outputs for all labels and suggestions.
 - The CLI downloads a missing `whisper.cpp` model automatically unless `--no-model-download` is used.
@@ -17,13 +18,13 @@ Label raw video footage, generate timestamped transcript txt files, create renam
 ## Command
 
 ```bash
-python3 -m footage_scribe.cli --root .
+python3 -m footage_scribe.cli --root . --apply-renames
 ```
 
 For known Korean footage:
 
 ```bash
-python3 -m footage_scribe.cli --root . --language ko
+python3 -m footage_scribe.cli --root . --language ko --apply-renames
 ```
 
 For language- or project-specific labels:

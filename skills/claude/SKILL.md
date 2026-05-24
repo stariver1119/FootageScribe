@@ -5,12 +5,13 @@ description: Label raw video footage, generate timestamped transcript txt files,
 
 # FootageScribe
 
-Use FootageScribe when the user wants to understand, label, transcribe, discuss, or explicitly rename raw video source clips.
+Use FootageScribe when the user wants to label and transcribe raw video source clips before editing. The normal workflow is to rename source files before importing them into an editor, then use the generated `.txt` scripts for agent discussion.
 
 ## Operating Rules
 
-- Original media must remain untouched unless the user explicitly asks for renaming.
-- If the user wants original files renamed, use `--apply-renames`.
+- If the user is preparing fresh source media before editor import, use `--apply-renames`.
+- If the user says the media is already linked in an editing project, do not rename unless they explicitly confirm.
+- Do not move, delete, or overwrite original media.
 - Use the shared CLI: `footage-scribe` or `python3 -m footage_scribe.cli`.
 - Default output folder: `_footage_scribe/`.
 - Default local transcription model: `whisper.cpp` `ggml-base.bin`.
@@ -22,20 +23,26 @@ Use FootageScribe when the user wants to understand, label, transcribe, discuss,
 ## Typical Command
 
 ```bash
-python3 -m footage_scribe.cli --root .
+python3 -m footage_scribe.cli --root . --apply-renames
 ```
 
 Known Korean footage:
 
 ```bash
-python3 -m footage_scribe.cli --root . --language ko
+python3 -m footage_scribe.cli --root . --language ko --apply-renames
 ```
 
 Explicit label rules:
 
 ```bash
-python3 -m footage_scribe.cli --root . --language en --rules en
-python3 -m footage_scribe.cli --root . --language ko --rules ko
+python3 -m footage_scribe.cli --root . --language en --rules en --apply-renames
+python3 -m footage_scribe.cli --root . --language ko --rules ko --apply-renames
+```
+
+Safe review mode without renaming:
+
+```bash
+python3 -m footage_scribe.cli --root .
 ```
 
 Test mode:
@@ -48,12 +55,6 @@ Visual-only:
 
 ```bash
 python3 -m footage_scribe.cli --root . --mode visual-only
-```
-
-Apply source-file renames when explicitly requested:
-
-```bash
-python3 -m footage_scribe.cli --root . --apply-renames
 ```
 
 ## Expected Output

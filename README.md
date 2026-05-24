@@ -163,7 +163,15 @@ export HF_HUB_DISABLE_XET=1
 
 ## Usage
 
-From a folder containing raw video files:
+Recommended pre-edit workflow:
+
+```bash
+footage-scribe --root . --apply-renames
+```
+
+Run this before importing media into Premiere Pro, Resolve, Final Cut Pro, or another editor. FootageScribe renames the original source files, then writes transcripts and manifests so the labeled files are visible inside the editor after import.
+
+Safe review mode without renaming:
 
 ```bash
 python3 -m footage_scribe.cli --root .

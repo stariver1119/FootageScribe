@@ -7,12 +7,13 @@ metadata:
 
 # FootageScribe
 
-Use this skill to prepare raw video clips for editing discussion. The core tool is the shared `footage-scribe` CLI.
+Use this skill to prepare raw video clips before they are imported into an editor. The normal workflow is to label and rename source files first, then import the renamed files into Premiere Pro, Resolve, Final Cut Pro, or another NLE. The core tool is the shared `footage-scribe` CLI.
 
 ## Rules
 
-- Do not rename, move, delete, or modify original media unless the user explicitly asks.
-- If the user wants original files renamed, use `--apply-renames`.
+- If the user is preparing fresh source media before editor import, use `--apply-renames`.
+- If the user says the media is already linked in an editing project, do not rename unless they explicitly confirm.
+- Do not move, delete, or overwrite original media.
 - Default output folder: `_footage_scribe/`.
 - Default model: local `whisper.cpp` `ggml-base.bin`.
 - If the requested model is missing, the CLI downloads it automatically unless `--no-model-download` is used.
@@ -26,20 +27,20 @@ Use this skill to prepare raw video clips for editing discussion. The core tool 
 From a source media folder:
 
 ```bash
-footage-scribe --root .
+footage-scribe --root . --apply-renames
 ```
 
 For known Korean footage:
 
 ```bash
-footage-scribe --root . --language ko
+footage-scribe --root . --language ko --apply-renames
 ```
 
 With explicit label rules:
 
 ```bash
-footage-scribe --root . --language en --rules en
-footage-scribe --root . --language ko --rules ko
+footage-scribe --root . --language en --rules en --apply-renames
+footage-scribe --root . --language ko --rules ko --apply-renames
 ```
 
 If the package is not installed, run from the repository:
@@ -48,16 +49,16 @@ If the package is not installed, run from the repository:
 python3 -m footage_scribe.cli --root .
 ```
 
+Safe review mode without renaming:
+
+```bash
+footage-scribe --root .
+```
+
 Test mode:
 
 ```bash
 python3 -m footage_scribe.cli --root . --output _footage_scribe_test --limit 3
-```
-
-Apply source-file renames when explicitly requested:
-
-```bash
-footage-scribe --root . --apply-renames
 ```
 
 ## Outputs
