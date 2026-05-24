@@ -24,6 +24,14 @@ For known Korean footage:
 python3 -m footage_scribe.cli --root . --model small --language ko
 ```
 
+For language- or project-specific labels:
+
+```bash
+python3 -m footage_scribe.cli --root . --language en --rules en
+python3 -m footage_scribe.cli --root . --language ko --rules ko
+python3 -m footage_scribe.cli --root . --rules ./my-label-rules.json
+```
+
 Options:
 
 ```bash

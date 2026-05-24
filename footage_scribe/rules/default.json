@@ -1,0 +1,41 @@
+{
+  "name": "default",
+  "description": "General multilingual starter rules for footage labels.",
+  "rules": [
+    {
+      "slug": "commentary_reaction",
+      "label": "talking head / comment reaction",
+      "keywords": ["comment", "reaction", "reply", "댓글", "코멘트", "리액션"]
+    },
+    {
+      "slug": "intro_talk",
+      "label": "intro / talking head",
+      "keywords": ["intro", "opening", "start", "인트로", "오프닝", "시작"]
+    },
+    {
+      "slug": "interview_clip",
+      "label": "interview / conversation",
+      "keywords": ["interview", "conversation", "question", "answer", "인터뷰", "대화", "질문"]
+    },
+    {
+      "slug": "screen_walkthrough",
+      "label": "screen walkthrough / tutorial",
+      "keywords": ["tutorial", "walkthrough", "screen", "setup", "튜토리얼", "설정", "화면"]
+    },
+    {
+      "slug": "product_closeup",
+      "label": "product close-up / detail shot",
+      "keywords": ["product", "closeup", "close-up", "detail", "제품", "클로즈업", "디테일"]
+    },
+    {
+      "slug": "food_detail",
+      "label": "food / tasting / detail shot",
+      "keywords": ["food", "coffee", "taste", "restaurant", "음식", "커피", "맛", "식당"]
+    },
+    {
+      "slug": "travel_broll",
+      "label": "travel / location / B-roll",
+      "keywords": ["travel", "station", "street", "market", "airport", "여행", "역", "거리", "시장", "공항"]
+    }
+  ]
+}

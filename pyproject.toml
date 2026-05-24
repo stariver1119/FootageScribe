@@ -35,3 +35,5 @@ footage-scribe = "footage_scribe.cli:main"
 [tool.setuptools.packages.find]
 include = ["footage_scribe*"]
 
+[tool.setuptools.package-data]
+footage_scribe = ["rules/*.json"]

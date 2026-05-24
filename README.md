@@ -184,10 +184,45 @@ Process matching filenames:
 footage-scribe --root . --include 'intro|commentary|pickup' --model small
 ```
 
+Use a specific label rule set:
+
+```bash
+footage-scribe --root . --language en --rules en
+footage-scribe --root . --language ko --rules ko
+footage-scribe --root . --rules ./my-label-rules.json
+```
+
 Visual-only mode:
 
 ```bash
 footage-scribe --root . --mode visual-only
+```
+
+## Label Rules
+
+FootageScribe's transcription is multilingual through Whisper. Labeling is intentionally configurable so the project is not locked to one language or creator niche.
+
+Built-in rule sets:
+
+- `default`: multilingual starter keywords
+- `en`: English starter keywords
+- `ko`: Korean starter keywords
+
+When `--rules auto` is used, FootageScribe selects `en` or `ko` when `--language en` or `--language ko` is provided. Otherwise it falls back to `default`.
+
+Custom rules are plain JSON:
+
+```json
+{
+  "name": "my-rules",
+  "rules": [
+    {
+      "slug": "studio_lighting_setup",
+      "label": "studio / lighting setup",
+      "keywords": ["softbox", "key light", "lighting test"]
+    }
+  ]
+}
 ```
 
 ## Frame Sampling Rules

@@ -1,0 +1,41 @@
+{
+  "name": "en",
+  "description": "English starter rules for footage labels.",
+  "rules": [
+    {
+      "slug": "commentary_reaction",
+      "label": "talking head / comment reaction",
+      "keywords": ["comment", "comments", "reaction", "reply", "viewer"]
+    },
+    {
+      "slug": "intro_talk",
+      "label": "intro / talking head",
+      "keywords": ["intro", "opening", "start", "welcome", "today"]
+    },
+    {
+      "slug": "interview_clip",
+      "label": "interview / conversation",
+      "keywords": ["interview", "conversation", "question", "answer", "asked"]
+    },
+    {
+      "slug": "screen_walkthrough",
+      "label": "screen walkthrough / tutorial",
+      "keywords": ["tutorial", "walkthrough", "screen", "click", "choose", "settings"]
+    },
+    {
+      "slug": "product_closeup",
+      "label": "product close-up / detail shot",
+      "keywords": ["product", "closeup", "close-up", "detail", "label", "packaging"]
+    },
+    {
+      "slug": "food_detail",
+      "label": "food / tasting / detail shot",
+      "keywords": ["food", "coffee", "taste", "restaurant", "dish", "beans"]
+    },
+    {
+      "slug": "travel_broll",
+      "label": "travel / location / B-roll",
+      "keywords": ["travel", "station", "street", "market", "airport", "hotel"]
+    }
+  ]
+}

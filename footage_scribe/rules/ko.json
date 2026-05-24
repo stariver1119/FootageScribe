@@ -1,0 +1,41 @@
+{
+  "name": "ko",
+  "description": "Korean starter rules for footage labels.",
+  "rules": [
+    {
+      "slug": "commentary_reaction",
+      "label": "talking head / comment reaction",
+      "keywords": ["댓글", "코멘트", "답글", "반응", "리액션"]
+    },
+    {
+      "slug": "intro_talk",
+      "label": "intro / talking head",
+      "keywords": ["인트로", "오프닝", "시작", "오늘은", "이번에는"]
+    },
+    {
+      "slug": "interview_clip",
+      "label": "interview / conversation",
+      "keywords": ["인터뷰", "대화", "질문", "답변", "물어봤"]
+    },
+    {
+      "slug": "screen_walkthrough",
+      "label": "screen walkthrough / tutorial",
+      "keywords": ["튜토리얼", "설정", "화면", "클릭", "선택", "방법"]
+    },
+    {
+      "slug": "product_closeup",
+      "label": "product close-up / detail shot",
+      "keywords": ["제품", "클로즈업", "디테일", "라벨", "패키지"]
+    },
+    {
+      "slug": "food_detail",
+      "label": "food / tasting / detail shot",
+      "keywords": ["음식", "커피", "맛", "식당", "원두", "디저트"]
+    },
+    {
+      "slug": "travel_broll",
+      "label": "travel / location / B-roll",
+      "keywords": ["여행", "역", "거리", "시장", "공항", "호텔"]
+    }
+  ]
+}

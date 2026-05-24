@@ -14,6 +14,7 @@ import json
 import re
 import subprocess
 import unicodedata
+from importlib.resources import files
 from pathlib import Path
 
 VIDEO_EXTS = {".mp4", ".mov", ".m4v", ".avi", ".mkv"}
@@ -21,6 +22,7 @@ DEFAULT_FFMPEG = "/opt/homebrew/bin/ffmpeg"
 DEFAULT_FFPROBE = "/opt/homebrew/bin/ffprobe"
 DEFAULT_WHISPER_CLI = "/opt/homebrew/bin/whisper-cli"
 DEFAULT_MODEL_DIR = Path.home() / ".local/share/whisper.cpp/models"
+DEFAULT_RULES = "default"
 
 
 def run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
@@ -197,17 +199,49 @@ def read_csv_transcript(path: Path) -> list[tuple[float, float, str]]:
     return rows
 
 
-def rough_label(original: str, transcript_rows: list[tuple[float, float, str]]) -> tuple[str, str]:
+def rules_path(name_or_path: str):
+    path = Path(name_or_path).expanduser()
+    if path.exists():
+        return path
+    if path.suffix == ".json":
+        return files("footage_scribe").joinpath("rules", path.name)
+    return files("footage_scribe").joinpath("rules", f"{name_or_path}.json")
+
+
+def load_rules(name_or_path: str) -> list[dict]:
+    path = rules_path(name_or_path)
+    if not path.exists():
+        raise FileNotFoundError(f"Label rules not found: {path}")
+    data = json.loads(path.read_text(encoding="utf-8"))
+    return data.get("rules", [])
+
+
+def selected_rules(language: str, requested: str) -> str:
+    if requested != "auto":
+        return requested
+    if language in {"en", "ko"}:
+        return language
+    return DEFAULT_RULES
+
+
+def rough_label(
+    original: str,
+    transcript_rows: list[tuple[float, float, str]],
+    rules: list[dict],
+) -> tuple[str, str]:
     name = unicodedata.normalize("NFC", Path(original).stem).lower()
     text = " ".join(t for _, _, t in transcript_rows).lower()
     combined = f"{name} {text}"
 
-    if "comment" in combined or "댓글" in combined:
-        return "commentary_reaction", "talking head / comment reaction"
-    if "intro" in combined or "인트로" in combined:
-        return "intro_talk", "intro / talking head"
-    if "bed" in combined or "침대" in combined:
-        return "bedroom_setup", "bedroom / setup"
+    for rule in rules:
+        slug = rule.get("slug")
+        label = rule.get("label")
+        if not slug or not label:
+            continue
+        keywords = [str(k).lower() for k in rule.get("keywords", [])]
+        if any(keyword in combined for keyword in keywords):
+            return str(slug), str(label)
+
     if transcript_rows:
         words = re.findall(r"[A-Za-z가-힣]{3,}", " ".join(t for _, _, t in transcript_rows))
         suffix = "_".join(words[:4]) if words else "talking_clip"
@@ -281,6 +315,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--ffmpeg", default=DEFAULT_FFMPEG)
     parser.add_argument("--ffprobe", default=DEFAULT_FFPROBE)
     parser.add_argument("--whisper-cli", default=DEFAULT_WHISPER_CLI)
+    parser.add_argument(
+        "--rules",
+        default="auto",
+        help="Label rule set name or JSON path. Built-ins: auto, default, en, ko.",
+    )
     return parser
 
 
@@ -294,6 +333,8 @@ def main(argv: list[str] | None = None) -> int:
     for folder in [scripts, audio_dir, frames]:
         folder.mkdir(parents=True, exist_ok=True)
 
+    rule_set = selected_rules(args.language, args.rules)
+    label_rules = load_rules(rule_set)
     videos = list_videos(root, args.include, args.limit)
     manifest_rows = []
     rename_rows = []
@@ -336,7 +377,7 @@ def main(argv: list[str] | None = None) -> int:
             except Exception as exc:
                 model_used = f"failed: {exc}"
 
-        label_slug, scene_label = rough_label(rel, transcript_rows)
+        label_slug, scene_label = rough_label(rel, transcript_rows, label_rules)
         recommended = clean_name(f"{label_slug}_{stem}").lower() + video.suffix.lower()
         confidence = transcript_confidence(transcript_rows)
         script_name = f"{idx:03d}_{clean_name(Path(recommended).stem).lower()}.txt"

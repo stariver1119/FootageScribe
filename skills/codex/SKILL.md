@@ -14,6 +14,7 @@ Use this skill to prepare raw video clips for editing discussion. The core tool 
 - Never rename, move, delete, or modify original media unless the user explicitly asks.
 - Default output folder: `_footage_scribe/`.
 - Default model: local `whisper.cpp` `ggml-small.bin`.
+- Use `--rules en`, `--rules ko`, or a custom JSON path when the user wants language- or project-specific label behavior.
 - Use `--mode visual-only` when the user only wants visual labels.
 - Treat transcripts as drafts. Warn when clips are mostly silence or repeated hallucinated text.
 - Do not create full edit plans unless the user asks separately.
@@ -30,6 +31,13 @@ For known Korean footage:
 
 ```bash
 footage-scribe --root . --model small --language ko
+```
+
+With explicit label rules:
+
+```bash
+footage-scribe --root . --model small --language en --rules en
+footage-scribe --root . --model small --language ko --rules ko
 ```
 
 If the package is not installed, run from the repository:
