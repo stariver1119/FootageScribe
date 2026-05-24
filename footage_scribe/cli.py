@@ -329,7 +329,7 @@ def build_parser() -> argparse.ArgumentParser:
         default="transcribe",
         help="Whether to run local transcription.",
     )
-    parser.add_argument("--model", default="small", help="whisper.cpp model name or .bin path.")
+    parser.add_argument("--model", default="base", help="whisper.cpp model name or .bin path.")
     parser.add_argument("--model-dir", default=str(DEFAULT_MODEL_DIR), help="GGML model directory.")
     parser.add_argument(
         "--language",

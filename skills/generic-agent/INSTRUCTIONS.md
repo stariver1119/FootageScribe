@@ -16,13 +16,13 @@ Label raw video footage, generate timestamped transcript txt files, and create r
 ## Command
 
 ```bash
-python3 -m footage_scribe.cli --root . --model small
+python3 -m footage_scribe.cli --root .
 ```
 
 For known Korean footage:
 
 ```bash
-python3 -m footage_scribe.cli --root . --model small --language ko
+python3 -m footage_scribe.cli --root . --language ko
 ```
 
 For language- or project-specific labels:

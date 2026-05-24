@@ -108,7 +108,7 @@ This keeps the core workflow portable. Any agent that can read files and run she
 flowchart TD
     A["Need fast rough labels?"] --> B["whisper.cpp ggml-base"]
     A --> C["Default source labeling"]
-    C --> D["whisper.cpp ggml-small"]
+    C --> D["whisper.cpp ggml-base"]
     D --> E["Timestamped txt scripts"]
     B --> E
     F["Need final subtitle accuracy?"] --> G["insanely-fast-whisper + large-v3-turbo"]
@@ -118,10 +118,11 @@ flowchart TD
 | Goal | Model | Best for |
 |---|---|---|
 | Fast rough labeling | `ggml-base.bin` | Large folders, quick topic detection |
-| Default source labeling | `ggml-small.bin` | Practical speed and quality |
+| Default source labeling | `ggml-base.bin` | Lightweight first-run default |
+| Higher-quality source labeling | `ggml-small.bin` | Better transcripts when speed is less important |
 | Final subtitle testing | `openai/whisper-large-v3-turbo` | Higher accuracy on selected final edits |
 
-For most source organization tasks, `ggml-small.bin` is the recommended default. Larger models can improve transcription, but they are slower and still need human review.
+For most source organization tasks, `ggml-base.bin` is the default because it keeps the first run fast and the initial download small. Use `--model small` when transcript quality matters more than speed.
 
 ## Requirements
 
@@ -140,7 +141,7 @@ When transcription runs, FootageScribe automatically downloads the requested `wh
 For offline or scripted environments, pre-download the model manually or disable automatic downloads:
 
 ```bash
-footage-scribe --root . --model small --no-model-download
+footage-scribe --root . --no-model-download
 ```
 
 Optional high-accuracy experiment:
@@ -161,21 +162,21 @@ export HF_HUB_DISABLE_XET=1
 From a folder containing raw video files:
 
 ```bash
-python3 -m footage_scribe.cli --root . --model small
+python3 -m footage_scribe.cli --root .
 ```
 
-If `ggml-small.bin` is not already available locally, this command downloads it before transcription.
+If `ggml-base.bin` is not already available locally, this command downloads it before transcription.
 
 For a known language, pass the Whisper language code:
 
 ```bash
-python3 -m footage_scribe.cli --root . --model small --language ko
+python3 -m footage_scribe.cli --root . --language ko
 ```
 
 After installing as a package:
 
 ```bash
-footage-scribe --root . --model small
+footage-scribe --root .
 ```
 
 Test on the first three clips:
@@ -187,7 +188,7 @@ footage-scribe --root . --output _footage_scribe_test --limit 3
 Process matching filenames:
 
 ```bash
-footage-scribe --root . --include 'intro|commentary|pickup' --model small
+footage-scribe --root . --include 'intro|commentary|pickup'
 ```
 
 Use a specific label rule set:
@@ -294,6 +295,6 @@ footage-scribe/
 
 ## Status
 
-Early workflow tool. Tested on Apple Silicon with `ffmpeg`, `whisper.cpp`, `ggml-small.bin`, and `insanely-fast-whisper` with `openai/whisper-large-v3-turbo`.
+Early workflow tool. Tested on Apple Silicon with `ffmpeg`, `whisper.cpp`, `ggml-base.bin`, `ggml-small.bin`, and `insanely-fast-whisper` with `openai/whisper-large-v3-turbo`.
 
 Transcript quality depends on audio quality, background noise, language, and model choice. Always review before using transcripts as published subtitles.

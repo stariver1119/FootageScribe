@@ -12,7 +12,7 @@ Use FootageScribe when the user wants to understand, label, transcribe, or discu
 - Original media must remain untouched by default.
 - Use the shared CLI: `footage-scribe` or `python3 -m footage_scribe.cli`.
 - Default output folder: `_footage_scribe/`.
-- Default local transcription model: `whisper.cpp` `ggml-small.bin`.
+- Default local transcription model: `whisper.cpp` `ggml-base.bin`.
 - If the requested model is missing, the CLI downloads it automatically unless `--no-model-download` is used.
 - Output should be plain text and TSV so it can be used by any agent.
 - Use `--rules en`, `--rules ko`, or a custom JSON path for language- or project-specific labels.
@@ -21,13 +21,13 @@ Use FootageScribe when the user wants to understand, label, transcribe, or discu
 ## Typical Command
 
 ```bash
-python3 -m footage_scribe.cli --root . --model small
+python3 -m footage_scribe.cli --root .
 ```
 
 Known Korean footage:
 
 ```bash
-python3 -m footage_scribe.cli --root . --model small --language ko
+python3 -m footage_scribe.cli --root . --language ko
 ```
 
 Explicit label rules:
