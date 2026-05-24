@@ -1,6 +1,6 @@
 ---
 name: footage-scribe
-description: Use when labeling raw footage, generating timestamped transcripts, preparing video source clips for editing discussion, or creating non-destructive sidecar notes for AI agents. Runs the FootageScribe CLI without renaming or moving original media.
+description: Use when labeling raw footage, generating timestamped transcripts, preparing video source clips for editing discussion, creating sidecar notes, or applying explicit source-file renames.
 metadata:
   short-description: Label footage into agent-ready transcripts
 ---
@@ -11,7 +11,8 @@ Use this skill to prepare raw video clips for editing discussion. The core tool 
 
 ## Rules
 
-- Never rename, move, delete, or modify original media unless the user explicitly asks.
+- Do not rename, move, delete, or modify original media unless the user explicitly asks.
+- If the user wants original files renamed, use `--apply-renames`.
 - Default output folder: `_footage_scribe/`.
 - Default model: local `whisper.cpp` `ggml-base.bin`.
 - If the requested model is missing, the CLI downloads it automatically unless `--no-model-download` is used.
@@ -53,6 +54,12 @@ Test mode:
 python3 -m footage_scribe.cli --root . --output _footage_scribe_test --limit 3
 ```
 
+Apply source-file renames when explicitly requested:
+
+```bash
+footage-scribe --root . --apply-renames
+```
+
 ## Outputs
 
 ```text
@@ -62,4 +69,4 @@ _footage_scribe/
 └── scripts/*.txt
 ```
 
-Report output paths and mention that original files were not changed.
+Report output paths and whether original files were renamed.

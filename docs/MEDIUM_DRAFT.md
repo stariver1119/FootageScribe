@@ -8,13 +8,13 @@ The obvious solution is to rename the files. The problem is that renaming source
 
 So I built **FootageScribe**.
 
-FootageScribe labels raw footage, generates timestamped transcripts, and turns source clips into plain-text notes you can discuss with ChatGPT, Claude, Codex, Cursor, or any local AI agent. Original media stays untouched.
+FootageScribe labels raw footage, generates timestamped transcripts, and turns source clips into plain-text notes you can discuss with ChatGPT, Claude, Codex, Cursor, or any local AI agent. Original media stays untouched by default, and can be renamed only when you explicitly opt in.
 
 ## The Core Idea
 
 FootageScribe does not try to become your editor.
 
-It does not make the final cut. It does not decide the story. It does not rename your media.
+It does not make the final cut. It does not decide the story. It does not rename your media unless you ask it to.
 
 It turns raw video files into searchable, agent-ready notes:
 
@@ -35,6 +35,7 @@ For example:
 ```text
 Original file: IMG_2968.MOV
 Suggested name: ticket_machine_walkthrough.mp4
+Final file: IMG_2968.MOV
 Duration: 00:01:26
 Transcription model: whisper.cpp ggml-small
 Original modified: no

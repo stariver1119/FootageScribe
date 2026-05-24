@@ -10,7 +10,7 @@ Git is useful for developers, but it is not the only way to get the project file
 
 ## What FootageScribe Needs
 
-FootageScribe is a local tool. It reads video files from your computer and writes sidecar text files next to them.
+FootageScribe is a local tool. It reads video files from your computer and writes sidecar text files next to them. It can also rename the original files when you explicitly use `--apply-renames`.
 
 It needs:
 
@@ -169,6 +169,14 @@ _footage_scribe/
 It does **not** rename original video files by default.
 
 It does **not** move original video files by default.
+
+If you want FootageScribe to rename original videos, run it with:
+
+```bash
+python3 -m footage_scribe.cli --root /path/to/your/videos --apply-renames
+```
+
+Use this only before the files are linked in Premiere Pro, Resolve, Final Cut Pro, or another editing project.
 
 The generated `.txt` files are meant to be easy to paste into an AI agent for editing discussion.
 

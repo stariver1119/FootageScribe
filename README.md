@@ -2,17 +2,18 @@
 
 **Label raw footage. Generate timestamped transcripts. Discuss edits with your AI agent.**
 
-FootageScribe is an agent-friendly CLI for creators and video editors. It scans raw video files, samples representative frames, transcribes speech with local Whisper models, and writes plain-text sidecar scripts plus rename suggestions.
+FootageScribe is an agent-friendly CLI for creators and video editors. It scans raw video files, samples representative frames, transcribes speech with local Whisper models, and writes plain-text sidecar scripts plus rename suggestions. It can also rename source files when you explicitly opt in.
 
-It is designed for editing workflows where source files may already be linked in **Adobe Premiere Pro**, **DaVinci Resolve**, **Final Cut Pro**, or another NLE. FootageScribe does **not** rename or move original media. It makes footage searchable and discussable without breaking project links.
+It is designed for editing workflows where source files may already be linked in **Adobe Premiere Pro**, **DaVinci Resolve**, **Final Cut Pro**, or another NLE. FootageScribe does **not** rename original media by default. Use `--apply-renames` only when source files are safe to rename.
 
 New to Git or local agent setup? See [Beginner Setup](docs/BEGINNER_SETUP.md).
 
 ## What It Does
 
-- Labels raw footage without modifying original files
+- Labels raw footage without modifying original files by default
 - Generates timestamped `.txt` transcripts for each video
-- Suggests human-readable filenames without applying renames
+- Suggests human-readable filenames
+- Optionally renames original source files with `--apply-renames`
 - Samples frames to infer visual context
 - Builds simple TSV manifests for search and review
 - Creates agent-ready editing notes for ChatGPT, Claude, Codex, Cursor, Continue, aider, and local AI agents
@@ -28,7 +29,7 @@ Typical use cases:
 
 ## Why Sidecar Files?
 
-Renaming source files after importing them into an editing project can break media links. FootageScribe keeps originals untouched and writes metadata beside them:
+Renaming source files after importing them into an editing project can break media links. By default, FootageScribe keeps originals untouched and writes metadata beside them:
 
 ```text
 VID_0017.MP4                       # original file remains unchanged
@@ -36,7 +37,7 @@ _footage_scribe/scripts/001_...txt # agent-ready transcript and labels
 _footage_scribe/rename_suggestions.tsv
 ```
 
-You get readable names and searchable transcripts without touching the media.
+You get readable names and searchable transcripts without touching the media. If you are preparing fresh raw footage before importing it into an editor, add `--apply-renames` to rename the original files.
 
 ## Workflow
 
@@ -75,6 +76,7 @@ _footage_scribe/
 ```text
 Original file: GX010143.MP4
 Suggested name: vendor_interview_coffee_notes.mp4
+Final file: GX010143.MP4
 Duration: 00:03:42
 Transcription model: whisper.cpp ggml-small
 Original modified: no
@@ -207,6 +209,14 @@ Visual-only mode:
 footage-scribe --root . --mode visual-only
 ```
 
+Apply suggested renames to original video files:
+
+```bash
+footage-scribe --root . --apply-renames
+```
+
+Use this only before media is linked in an editing project. If a target filename already exists, FootageScribe appends a numeric suffix such as `_2`.
+
 ## Label Rules
 
 FootageScribe's transcription is multilingual through Whisper. Labeling is intentionally configurable so the project is not locked to one language or creator niche.
@@ -249,8 +259,8 @@ Frame sampling is useful for labels like interview, product close-up, desk setup
 
 ## What It Does Not Do
 
-- It does not rename original videos.
-- It does not move original videos.
+- It does not rename original videos unless `--apply-renames` is used.
+- It does not move videos between folders.
 - It does not generate a full edit plan.
 - It does not replace manual transcript review.
 - It does not create final subtitles by default.

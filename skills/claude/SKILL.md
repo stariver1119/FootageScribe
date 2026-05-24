@@ -1,15 +1,16 @@
 ---
 name: footage-scribe
-description: Label raw video footage, generate timestamped transcript txt files, and create non-destructive sidecar notes for video editing discussions with AI agents.
+description: Label raw video footage, generate timestamped transcript txt files, create sidecar notes, and apply explicit source-file renames for video editing discussions with AI agents.
 ---
 
 # FootageScribe
 
-Use FootageScribe when the user wants to understand, label, transcribe, or discuss raw video source clips without renaming original media.
+Use FootageScribe when the user wants to understand, label, transcribe, discuss, or explicitly rename raw video source clips.
 
 ## Operating Rules
 
-- Original media must remain untouched by default.
+- Original media must remain untouched unless the user explicitly asks for renaming.
+- If the user wants original files renamed, use `--apply-renames`.
 - Use the shared CLI: `footage-scribe` or `python3 -m footage_scribe.cli`.
 - Default output folder: `_footage_scribe/`.
 - Default local transcription model: `whisper.cpp` `ggml-base.bin`.
@@ -49,6 +50,12 @@ Visual-only:
 python3 -m footage_scribe.cli --root . --mode visual-only
 ```
 
+Apply source-file renames when explicitly requested:
+
+```bash
+python3 -m footage_scribe.cli --root . --apply-renames
+```
+
 ## Expected Output
 
 ```text
@@ -60,4 +67,4 @@ _footage_scribe/
 └── scripts/
 ```
 
-After running, summarize where outputs were written, note low-confidence transcripts, and remind the user that original media was not renamed.
+After running, summarize where outputs were written, note low-confidence transcripts, and state whether original media was renamed.

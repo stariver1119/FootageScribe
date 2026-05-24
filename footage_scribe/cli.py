@@ -70,6 +70,16 @@ def clean_name(text: str) -> str:
     return text or "clip"
 
 
+def unique_path(path: Path) -> Path:
+    if not path.exists():
+        return path
+    for idx in range(2, 1000):
+        candidate = path.with_name(f"{path.stem}_{idx}{path.suffix}")
+        if not candidate.exists():
+            return candidate
+    raise FileExistsError(f"Could not find an available filename for: {path}")
+
+
 def model_path(model: str, model_dir: Path) -> Path:
     if model.endswith(".bin") or "/" in model:
         return Path(model).expanduser()
@@ -288,18 +298,21 @@ def write_script(
     path: Path,
     original: str,
     recommended: str,
+    final_file: str,
     duration: float,
     model: str,
     label: str,
     confidence: str,
+    original_modified: bool,
     transcript_rows: list[tuple[float, float, str]],
 ) -> None:
     lines = [
         f"Original file: {original}",
         f"Suggested name: {recommended}",
+        f"Final file: {final_file}",
         f"Duration: {fmt_duration(duration)}",
         f"Transcription model: {model}",
-        "Original modified: no",
+        f"Original modified: {'yes' if original_modified else 'no'}",
         f"Scene label: {label}",
         f"Confidence: {confidence}",
         "",
@@ -338,6 +351,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--include", help="Only process relative paths matching this regex.")
     parser.add_argument("--limit", type=int, help="Process only the first N matching videos.")
+    parser.add_argument(
+        "--apply-renames",
+        action="store_true",
+        help="Rename original video files to the suggested names after sidecar files are written.",
+    )
     parser.add_argument("--ffmpeg", default=DEFAULT_FFMPEG)
     parser.add_argument("--ffprobe", default=DEFAULT_FFPROBE)
     parser.add_argument("--whisper-cli", default=DEFAULT_WHISPER_CLI)
@@ -421,35 +439,64 @@ def main(argv: list[str] | None = None) -> int:
                 model_used = f"failed: {exc}"
 
         label_slug, scene_label = rough_label(rel, transcript_rows, label_rules)
-        recommended = clean_name(f"{label_slug}_{stem}").lower() + video.suffix.lower()
+        stem_lower = stem.lower()
+        if stem_lower.startswith(f"{label_slug}_"):
+            recommended = stem_lower + video.suffix.lower()
+        else:
+            recommended = clean_name(f"{label_slug}_{stem}").lower() + video.suffix.lower()
         confidence = transcript_confidence(transcript_rows)
         script_name = f"{idx:03d}_{clean_name(Path(recommended).stem).lower()}.txt"
+        final_file = rel
+        renamed = "no"
+        if args.apply_renames:
+            try:
+                target = video.with_name(recommended)
+                if target == video:
+                    renamed = "already"
+                else:
+                    target = unique_path(target)
+                    video.rename(target)
+                    renamed = "yes"
+                final_file = str(target.relative_to(root))
+            except Exception as exc:
+                renamed = f"failed: {exc}"
         write_script(
             scripts / script_name,
             rel,
             recommended,
+            final_file,
             duration,
             model_used,
             scene_label,
             confidence,
+            renamed == "yes",
             transcript_rows,
         )
 
         manifest_rows.append(
-            [idx, rel, fmt_duration(duration), script_name, ";".join(frame_files), model_used, confidence]
+            [idx, rel, final_file, fmt_duration(duration), script_name, ";".join(frame_files), model_used, confidence]
         )
-        rename_rows.append([idx, rel, recommended, "no"])
+        rename_rows.append([idx, rel, recommended, final_file, renamed])
 
     with (out / "manifest.tsv").open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f, delimiter="\t")
         writer.writerow(
-            ["index", "original_file", "duration", "script_txt", "frames", "transcription_model", "confidence"]
+            [
+                "index",
+                "original_file",
+                "final_file",
+                "duration",
+                "script_txt",
+                "frames",
+                "transcription_model",
+                "confidence",
+            ]
         )
         writer.writerows(manifest_rows)
 
     with (out / "rename_suggestions.tsv").open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f, delimiter="\t")
-        writer.writerow(["index", "original_file", "suggested_name", "renamed"])
+        writer.writerow(["index", "original_file", "suggested_name", "final_file", "renamed"])
         writer.writerows(rename_rows)
 
     print(out)
