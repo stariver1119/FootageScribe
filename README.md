@@ -6,6 +6,8 @@ FootageScribe is an agent-friendly CLI for creators and video editors. It scans 
 
 It is designed for editing workflows where source files may already be linked in **Adobe Premiere Pro**, **DaVinci Resolve**, **Final Cut Pro**, or another NLE. FootageScribe does **not** rename or move original media. It makes footage searchable and discussable without breaking project links.
 
+New to Git or local agent setup? See [Beginner Setup](docs/BEGINNER_SETUP.md).
+
 ## What It Does
 
 - Labels raw footage without modifying original files
@@ -291,6 +293,8 @@ footage-scribe/
 │   ├── claude/
 │   └── generic-agent/
 └── docs/
+    ├── BEGINNER_SETUP.md
+    └── MEDIUM_DRAFT.md
 ```
 
 ## Status
