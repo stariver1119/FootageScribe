@@ -128,15 +128,19 @@ For most source organization tasks, `ggml-small.bin` is the recommended default.
 - Python 3.10+
 - `ffmpeg` and `ffprobe`
 - `whisper.cpp`
-- a local GGML Whisper model
 
 macOS setup with Homebrew:
 
 ```bash
 brew install ffmpeg whisper-cpp
-mkdir -p ~/.local/share/whisper.cpp/models
-curl -L -o ~/.local/share/whisper.cpp/models/ggml-small.bin \
-  https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.bin
+```
+
+When transcription runs, FootageScribe automatically downloads the requested `whisper.cpp` GGML model if it is missing. Models are stored under `~/.local/share/whisper.cpp/models/`.
+
+For offline or scripted environments, pre-download the model manually or disable automatic downloads:
+
+```bash
+footage-scribe --root . --model small --no-model-download
 ```
 
 Optional high-accuracy experiment:
@@ -159,6 +163,8 @@ From a folder containing raw video files:
 ```bash
 python3 -m footage_scribe.cli --root . --model small
 ```
+
+If `ggml-small.bin` is not already available locally, this command downloads it before transcription.
 
 For a known language, pass the Whisper language code:
 

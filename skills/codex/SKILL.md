@@ -14,6 +14,7 @@ Use this skill to prepare raw video clips for editing discussion. The core tool 
 - Never rename, move, delete, or modify original media unless the user explicitly asks.
 - Default output folder: `_footage_scribe/`.
 - Default model: local `whisper.cpp` `ggml-small.bin`.
+- If the requested model is missing, the CLI downloads it automatically unless `--no-model-download` is used.
 - Use `--rules en`, `--rules ko`, or a custom JSON path when the user wants language- or project-specific label behavior.
 - Use `--mode visual-only` when the user only wants visual labels.
 - Treat transcripts as drafts. Warn when clips are mostly silence or repeated hallucinated text.

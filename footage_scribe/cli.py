@@ -13,7 +13,9 @@ import csv
 import json
 import re
 import subprocess
+import sys
 import unicodedata
+import urllib.request
 from importlib.resources import files
 from pathlib import Path
 
@@ -23,6 +25,7 @@ DEFAULT_FFPROBE = "/opt/homebrew/bin/ffprobe"
 DEFAULT_WHISPER_CLI = "/opt/homebrew/bin/whisper-cli"
 DEFAULT_MODEL_DIR = Path.home() / ".local/share/whisper.cpp/models"
 DEFAULT_RULES = "default"
+WHISPER_CPP_MODEL_BASE_URL = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main"
 
 
 def run(cmd: list[str], **kwargs) -> subprocess.CompletedProcess:
@@ -71,6 +74,33 @@ def model_path(model: str, model_dir: Path) -> Path:
     if model.endswith(".bin") or "/" in model:
         return Path(model).expanduser()
     return model_dir / f"ggml-{model}.bin"
+
+
+def model_download_url(model: str) -> str | None:
+    if model.endswith(".bin") or "/" in model:
+        return None
+    return f"{WHISPER_CPP_MODEL_BASE_URL}/ggml-{model}.bin"
+
+
+def ensure_model(model: str, model_dir: Path, allow_download: bool) -> Path:
+    path = model_path(model, model_dir)
+    if path.exists():
+        return path
+
+    url = model_download_url(model)
+    if not allow_download or not url:
+        raise FileNotFoundError(f"Whisper model not found: {path}")
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".part")
+    print(f"Downloading Whisper model '{model}' to {path}", file=sys.stderr)
+    try:
+        urllib.request.urlretrieve(url, tmp)
+        tmp.replace(path)
+    except Exception:
+        tmp.unlink(missing_ok=True)
+        raise
+    return path
 
 
 def list_videos(root: Path, include: str | None, limit: int | None) -> list[Path]:
@@ -156,20 +186,16 @@ def extract_audio(video: Path, out: Path, ffmpeg: str) -> None:
 def transcribe_whisper_cpp(
     audio: Path,
     outbase: Path,
-    model: str,
-    model_dir: Path,
+    model_file: Path,
     whisper_cli: str,
     language: str,
 ) -> None:
-    mp = model_path(model, model_dir)
-    if not mp.exists():
-        raise FileNotFoundError(f"Whisper model not found: {mp}")
     run(
         [
             whisper_cli,
             "-ng",
             "-m",
-            str(mp),
+            str(model_file),
             "-f",
             str(audio),
             "-l",
@@ -316,6 +342,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--ffprobe", default=DEFAULT_FFPROBE)
     parser.add_argument("--whisper-cli", default=DEFAULT_WHISPER_CLI)
     parser.add_argument(
+        "--no-model-download",
+        action="store_true",
+        help="Fail if the requested Whisper model is missing instead of downloading it.",
+    )
+    parser.add_argument(
         "--rules",
         default="auto",
         help="Label rule set name or JSON path. Built-ins: auto, default, en, ko.",
@@ -336,6 +367,17 @@ def main(argv: list[str] | None = None) -> int:
     rule_set = selected_rules(args.language, args.rules)
     label_rules = load_rules(rule_set)
     videos = list_videos(root, args.include, args.limit)
+    model_file: Path | None = None
+    if args.mode == "transcribe" and videos:
+        try:
+            model_file = ensure_model(
+                args.model,
+                Path(args.model_dir).expanduser(),
+                not args.no_model_download,
+            )
+        except Exception as exc:
+            print(f"Error preparing Whisper model: {exc}", file=sys.stderr)
+            return 2
     manifest_rows = []
     rename_rows = []
 
@@ -360,11 +402,12 @@ def main(argv: list[str] | None = None) -> int:
             rawbase = scripts / f"{idx:03d}_{stem}.raw"
             try:
                 extract_audio(video, wav, args.ffmpeg)
+                if model_file is None:
+                    raise FileNotFoundError("Whisper model was not prepared.")
                 transcribe_whisper_cpp(
                     wav,
                     rawbase,
-                    args.model,
-                    Path(args.model_dir).expanduser(),
+                    model_file,
                     args.whisper_cli,
                     args.language,
                 )

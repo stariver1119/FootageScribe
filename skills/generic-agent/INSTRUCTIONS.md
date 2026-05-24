@@ -11,6 +11,7 @@ Label raw video footage, generate timestamped transcript txt files, and create r
 - Do not rename, move, delete, or overwrite original video files.
 - Write outputs only under `_footage_scribe/` or a user-provided output folder.
 - Use sidecar text/TSV outputs for all labels and suggestions.
+- The CLI downloads a missing `whisper.cpp` model automatically unless `--no-model-download` is used.
 
 ## Command
 
