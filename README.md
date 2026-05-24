@@ -312,7 +312,8 @@ footage-scribe/
 │   └── generic-agent/
 └── docs/
     ├── BEGINNER_SETUP.md
-    └── MEDIUM_DRAFT.md
+    ├── MEDIUM_DRAFT.md
+    └── MEDIUM_DRAFT_OLWATY_CREATOR_TOOLS.md
 ```
 
 ## Status
