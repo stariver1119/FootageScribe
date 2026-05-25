@@ -200,6 +200,8 @@ def transcribe_whisper_cpp(
     whisper_cli: str,
     language: str,
     no_gpu: bool,
+    beam_size: int,
+    best_of: int,
 ) -> None:
     cmd = [
         whisper_cli,
@@ -220,6 +222,10 @@ def transcribe_whisper_cpp(
             str(outbase),
             "-pp",
             "-sns",
+            "-bs",
+            str(beam_size),
+            "-bo",
+            str(best_of),
         ]
     )
     run(
@@ -377,6 +383,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Pass -ng to whisper.cpp and disable GPU/Metal acceleration.",
     )
     parser.add_argument(
+        "--beam-size",
+        type=int,
+        default=1,
+        help="Beam size for whisper.cpp. Default 1 favors fast labeling drafts.",
+    )
+    parser.add_argument(
+        "--best-of",
+        type=int,
+        default=1,
+        help="Best-of candidates for whisper.cpp. Default 1 favors fast labeling drafts.",
+    )
+    parser.add_argument(
         "--rules",
         default="auto",
         help="Label rule set name or JSON path. Built-ins: auto, default, en, ko.",
@@ -441,6 +459,8 @@ def main(argv: list[str] | None = None) -> int:
                     args.whisper_cli,
                     args.language,
                     args.no_gpu,
+                    args.beam_size,
+                    args.best_of,
                 )
                 raw_csv = rawbase.with_suffix(".raw.csv")
                 raw_txt = rawbase.with_suffix(".raw.txt")
