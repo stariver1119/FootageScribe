@@ -1,8 +1,14 @@
-# FootageScribe: A Small Open-Source Tool from Olwaty for Preparing Raw Video Footage
+# You Know That Annoying Part Where You Rename Every Raw Video Before Editing?
 
-Before a video becomes a finished upload, it usually passes through a messy folder of raw files.
+You know that annoying pre-editing ritual where you open every raw video, watch just enough to remember what it is, rename it, and then finally import it into Premiere or Resolve?
 
-That folder is full of names like:
+I got tired of doing that.
+
+So we built **FootageScribe**.
+
+FootageScribe is a small open-source tool from [Olwaty](https://olwaty.com) that labels raw footage, generates timestamped transcripts, and renames source files before they enter your editing project.
+
+That matters because raw footage folders usually start like this:
 
 ```text
 VID_0017.MP4
@@ -16,13 +22,9 @@ The practical fix is simple: rename the footage before importing it into your ed
 
 The problem is that doing this manually is slow.
 
-So we built **FootageScribe**.
+FootageScribe handles that first pass. It transcribes speech locally with Whisper, samples representative frames, applies rough labels, and can rename the original source files before they are imported into Premiere Pro, DaVinci Resolve, Final Cut Pro, or another editing tool.
 
-FootageScribe is an open-source CLI that labels raw video files, transcribes speech locally with Whisper, samples representative frames, and can rename source files before they are imported into Premiere Pro, DaVinci Resolve, Final Cut Pro, or another editing tool.
-
-It is provided by [Olwaty](https://olwaty.com).
-
-Olwaty has a main service focused on helping viewers continue watching a creator's content archive. At the same time, we are also building additional practical tools for creators, especially around the parts of the workflow that are still repetitive, fragmented, or hard to discuss with AI agents.
+It is provided by Olwaty. Olwaty has a main service focused on helping viewers continue watching a creator's content archive. At the same time, we are also building additional practical tools for creators, especially around the parts of the workflow that are still repetitive, fragmented, or hard to discuss with AI agents.
 
 FootageScribe is one of those tools.
 
