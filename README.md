@@ -142,6 +142,8 @@ brew install ffmpeg whisper-cpp
 
 When transcription runs, FootageScribe automatically downloads the requested `whisper.cpp` GGML model if it is missing. Models are stored under `~/.local/share/whisper.cpp/models/`.
 
+On Apple Silicon, FootageScribe lets `whisper.cpp` use Metal/GPU acceleration by default. Use `--no-gpu` only when you need CPU-only behavior.
+
 For offline or scripted environments, pre-download the model manually or disable automatic downloads:
 
 ```bash

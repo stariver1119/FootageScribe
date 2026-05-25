@@ -199,11 +199,15 @@ def transcribe_whisper_cpp(
     model_file: Path,
     whisper_cli: str,
     language: str,
+    no_gpu: bool,
 ) -> None:
-    run(
+    cmd = [
+        whisper_cli,
+    ]
+    if no_gpu:
+        cmd.append("-ng")
+    cmd.extend(
         [
-            whisper_cli,
-            "-ng",
             "-m",
             str(model_file),
             "-f",
@@ -216,7 +220,10 @@ def transcribe_whisper_cpp(
             str(outbase),
             "-pp",
             "-sns",
-        ],
+        ]
+    )
+    run(
+        cmd,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
@@ -365,6 +372,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Fail if the requested Whisper model is missing instead of downloading it.",
     )
     parser.add_argument(
+        "--no-gpu",
+        action="store_true",
+        help="Pass -ng to whisper.cpp and disable GPU/Metal acceleration.",
+    )
+    parser.add_argument(
         "--rules",
         default="auto",
         help="Label rule set name or JSON path. Built-ins: auto, default, en, ko.",
@@ -428,6 +440,7 @@ def main(argv: list[str] | None = None) -> int:
                     model_file,
                     args.whisper_cli,
                     args.language,
+                    args.no_gpu,
                 )
                 raw_csv = rawbase.with_suffix(".raw.csv")
                 raw_txt = rawbase.with_suffix(".raw.txt")
