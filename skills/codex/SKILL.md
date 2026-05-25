@@ -21,6 +21,10 @@ Use this skill to prepare raw video clips before they are imported into an edito
 - Use `--mode visual-only` when the user only wants visual labels.
 - Treat transcripts as drafts. Warn when clips are mostly silence or repeated hallucinated text.
 - Do not create full edit plans unless the user asks separately.
+- The shared CLI processes files sequentially by default. Keep that behavior for large jobs.
+- Do not start multiple full-folder transcription runs at the same time.
+- If you manually parallelize individual clips, sort clips by duration ascending and run at most 2 clips concurrently.
+- Only parallelize short clips. Clips around 30 minutes or longer, hour-long clips, and any uncertain/large files must be processed sequentially.
 
 ## Commands
 

@@ -19,6 +19,10 @@ Use FootageScribe when the user wants to label and transcribe raw video source c
 - Output should be plain text and TSV so it can be used by any agent.
 - Use `--rules en`, `--rules ko`, or a custom JSON path for language- or project-specific labels.
 - Do not generate a complete edit plan unless explicitly requested.
+- The shared CLI processes files sequentially by default. Keep that behavior for large jobs.
+- Do not start multiple full-folder transcription runs at the same time.
+- If you manually parallelize individual clips, sort clips by duration ascending and run at most 2 clips concurrently.
+- Only parallelize short clips. Clips around 30 minutes or longer, hour-long clips, and any uncertain/large files must be processed sequentially.
 
 ## Typical Command
 

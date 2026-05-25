@@ -128,6 +128,12 @@ flowchart TD
 
 For most source organization tasks, `ggml-base.bin` is the default because it keeps the first run fast and the initial download small. Use `--model small` when transcript quality matters more than speed.
 
+## Processing Policy
+
+FootageScribe's CLI processes files sequentially by default. Keep that default for large folders and long source files.
+
+If you build an agent wrapper or custom batch runner, do not start multiple full-folder transcription runs at the same time. When manually parallelizing individual clips, sort clips by duration from shortest to longest and run at most 2 clips concurrently. Only short clips should be parallelized; clips around 30 minutes or longer, hour-long clips, and any uncertain/large files should be processed sequentially.
+
 ## Requirements
 
 - Python 3.10+

@@ -14,6 +14,10 @@ Label raw video footage, generate timestamped transcript txt files, and apply so
 - Write outputs only under `_footage_scribe/` or a user-provided output folder.
 - Use sidecar text/TSV outputs for all labels and suggestions.
 - The CLI downloads a missing `whisper.cpp` model automatically unless `--no-model-download` is used.
+- The shared CLI processes files sequentially by default. Keep that behavior for large jobs.
+- Do not start multiple full-folder transcription runs at the same time.
+- If you manually parallelize individual clips, sort clips by duration ascending and run at most 2 clips concurrently.
+- Only parallelize short clips. Clips around 30 minutes or longer, hour-long clips, and any uncertain/large files must be processed sequentially.
 
 ## Command
 
